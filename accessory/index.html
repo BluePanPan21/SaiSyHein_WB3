@@ -1,32 +1,32 @@
 <!DOCTYPE html>
 <html>
- 
+
 <head>
     <title>Car Accessories</title>
-    <link rel="stylesheet" href="/css/global.css"> 
-   <style>
+    <style>
         table {
             width: 20vw;
         }
+
         table tr:nth-child(even) {
             background-color: #f2f2f2;
         }
-    
+
         table tr:nth-child(odd) {
             background-color: #ffffff;
         }
- 
+
         table tfoot {
             font-weight: bold;
         }
- 
     </style>
-
+    <link rel="stylesheet" href="/css/global.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 </head>
- 
+
 <body>
     <h1>Car Accessories</h1>
- 
+
     <form id="accessoryForm">
         <label for="accessory">Select an accessory:</label>
         <select id="accessory">
@@ -35,22 +35,22 @@
             <option value="3">Seat Covers</option>
             <option value="4">Phone Holder</option>
         </select>
- 
+
         <label for="amount">Amount:</label>
         <input type="number" id="amount" min="1" value="1">
         <br>
-        <button type="button" onclick="addToProductList()">Add</button>
+        <button type="button" id="addButton">Add</button>
     </form>
- 
+
     <table id="productList">
         <thead>
             <tr>
-                <th width 10>Accessory</th>
-                <th width 10>Amount</th>
-                <th width 10>Price</th>
+                <th>Accessory</th>
+                <th>Amount</th>
+                <th>Price</th>
             </tr>
         </thead>
-        <tbody id="productList">
+        <tbody>
             <!-- Product list items will be added here dynamically -->
         </tbody>
         <tfoot>
@@ -60,34 +60,30 @@
             </tr>
         </tfoot>
     </table>
- 
+
     <script>
-        var totalPrice = 0
-        function addToProductList() {
-            var accessorySelect = document.getElementById("accessory");
-            var accessoryOption = accessorySelect.options[accessorySelect.selectedIndex];
-            var accessoryName = accessoryOption.text;
-            var accessoryPrice = accessoryOption.value;
-            var amountInput = document.getElementById("amount");
-            var amount = amountInput.value;
- 
-            var productList = document.getElementById("productList");
-            var newRow = productList.insertRow(-1);
-            var accessoryCell = newRow.insertCell(0);
-            var amountCell = newRow.insertCell(1);
-            var priceCell = newRow.insertCell(2);
- 
-            accessoryCell.innerHTML = accessoryName;
-            amountCell.innerHTML = amount;
-            priceCell.innerHTML = accessoryPrice * amount;
- 
-            // Update the total price
-            totalPrice += accessoryPrice * amount
-            document.getElementById("totalPrice").innerHTML = totalPrice;
-        }
- 
-        
+        var totalPrice = 0;
+
+        $(document).ready(function () {
+            $('#addButton').on('click', function () {
+                var accessorySelect = $('#accessory');
+                var accessoryOption = accessorySelect.find('option:selected');
+                var accessoryName = accessoryOption.text();
+                var accessoryPrice = parseFloat(accessoryOption.val());
+                var amount = parseInt($('#amount').val());
+
+                var newRow = $('<tr>');
+                newRow.append($('<td>').text(accessoryName));
+                newRow.append($('<td>').text(amount));
+                newRow.append($('<td>').text(accessoryPrice * amount));
+
+                $('#productList tbody').append(newRow);
+
+                totalPrice += accessoryPrice * amount;
+                $('#totalPrice').text(totalPrice);
+            });
+        });
     </script>
 </body>
- 
+
 </html>
